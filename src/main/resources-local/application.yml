@@ -1,0 +1,36 @@
+server:
+  port: 8050
+
+spring:
+  cloud:
+    stream:
+      function:
+        definition: shippingOrderProcess #
+      kafka:
+        binder:
+          functions:
+            # APPLICATION ID if we have more than one stream app within same springboot
+            inventoryOrderProcess:
+              applicationId: shipping-order-app
+          configuration:
+            commit.interval.ms: 100
+            default:
+              key.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+              #              value.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+              value.serde: org.apache.kafka.common.serialization.Serdes$JsonSerde
+          brokers: 192.168.100.12:9092
+      bindings:
+        order-in:
+          destination: orders
+          contentType: application/json
+        #          consumer:
+        #            headerMode: raw
+        order-verified-out:
+          destination: order-verified
+          contentType: application/json
+        #          nativeEncoding: true
+        #          producer:
+        #            keySerde: org.apache.kafka.common.serialization.Serdes$StringSerde
+        #            valueSerde: org.apache.kafka.common.serialization.Serdes$JsonSerde
+        #            headerMode: raw
+
